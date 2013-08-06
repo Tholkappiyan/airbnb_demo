@@ -1,0 +1,63 @@
+<% provide(:title, 'Search Results') %>
+
+<div class="tab-pane hero-unit" style="background-color:cornflowerblue" id="properties">
+<% if @properties.count==0 %>
+  <h1>There are no properties matching your search!!!</h1>
+<%else%>
+  <h1>Properties matching your search</h1>
+<% end %>
+<ul style="list-style:none">
+  <% @properties.each do |property| %>
+	<li>
+  		<h3 class="title"><%= property.title %></h3>
+  		<h4 class="description"><%= property.description %></h4>
+
+  		<table width="100%">
+    		<tr width="100%">
+      			<td width="50%">
+        			<span>
+			          <table>
+            			<tr>
+              				<td valign="top"><b>Address</b></td>
+              				<td><span><%= property.addr1 %><br/><%= property.addr2 %><br/><%= property.city %><br/><%= property.state %></span></td>
+			            </tr>
+            			<tr>
+              				<td><b>Property type</b></td>
+              				<td><span><%= property.prop_type %></span></td>
+			            </tr>
+            			<tr>
+            				<td><b>Rate per night</b></td>
+              				<td><span><%= property.rate %></span></td>
+			            </tr>
+            			<tr>
+              				<td><b>Start Date</b></td>
+				            <td><span><%= Date.strptime(property.avail_start.to_s, "%Y-%m-%d %H:%M:%S %Z").strftime("%d/%m/%Y") %></span></td>
+			            </tr>
+            			<tr>
+              				<td><b>Closing Date</b></td>
+              				<td><span><%= Date.strptime( property.avail_end.to_s, "%Y-%m-%d %H:%M:%S %Z").strftime("%d/%m/%Y") %></span></td>
+            			</tr>
+            			<tr>
+            				<td><b>Owner's email id</b></td>
+              				<td><span><%= property.user.email %></span></td>
+			            </tr>
+          			  </table>
+			        </span>
+			    </td>
+      			<td width="30%">
+        			<% if property.image? %>
+          				<%= image_tag property.image.url(:medium) %>
+			        <% end %>
+      			</td>
+      			<td width="20%">
+        			<button class="btn btn-mini pull-right"><i class="icon-time"></i><%= link_to "Book it!", new_property_booking_path(:property_id => property.id) %></button>
+ 			     </td>
+		    </tr>
+  		</table>
+      <hr>
+	</li>
+  <% end %>
+</ul>
+<br/><br/><br/>
+<%= render 'layouts/searchbar' %>
+</div>

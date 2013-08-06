@@ -1,0 +1,76 @@
+<script>
+    function comp(start,end)
+    {
+        var from = start.split("-");
+        var to = end.split("-");
+
+        if( from[0] > to[0] )
+        {
+          return false;
+        }
+        else if( (from[0]==to[0]) && (from[1] > to[1]) )
+        {
+          return false;
+        }
+        else if( (from[0]==to[0]) && (from[1] == to[1]) && (from[2] > to[2]) )
+        {
+          return false;
+        }
+        else
+        {
+          return true;
+        }
+    }
+    function check_date()
+    {
+        var start = document.getElementById("start").value;
+        var end = document.getElementById("end").value;
+        if( (start!='') && (end!='') && (comp(start,end)==false) )
+        {
+            alert("'To' date should be later than 'From' date");
+            return false;
+        }
+    }
+
+    $(document).ready(function(){
+
+        // var d = new Date();
+        // var day = d.getDate();
+        // var month = d.getMonth();
+
+        // var output = d.getFullYear() + '-' +(month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day;
+
+        // $("#start").val(output);
+        // $("#start").attr('min',output);
+        // $("#end").val(output);
+        // $("#end").attr('min',output);
+
+        $("#start").blur(function(){
+            $("#end").removeAttr('min');
+            $("#end").attr('min',$("#start").val());
+        });
+
+        $("#end").blur(function(){
+            $("#end").removeAttr('max');
+            $("#start").attr('max',$("#end").val());
+        });
+
+    });
+
+</script>
+
+    <div class="navbar">
+    	<div class="navbar-inner">
+            <%= form_tag(search_path) do %>
+    		<ul class="nav" style="margin-left:50px;">
+    			<li><input type="text" name="city" placeholder="Visiting city???" style="margin-top:5px" /></li>
+    			<li style="margin-top:10px">&nbsp; From : &nbsp;</li>
+    			<li style="margin-top:4px" ><input type="date" name="start" id="start" placeholder="From" /></li>
+    			<li style="margin-top:10px">&nbsp; To :&nbsp;</li>
+    			<li style="margin-top:4px"><input type="date" name="end" id="end" placeholder="To"/></li>
+    			<li style="margin-top:10px"> &nbsp; &nbsp; </li>
+    			<li><button class="btn btn-info pull-right" onclick="check_date()" >Search</button></li>
+    		</ul>
+            <% end %>
+    	</div>
+    </div>

@@ -1,0 +1,11 @@
+<footer class="footer">
+  <small>
+    <a href="https://www.airbnb.com/">Airbnb</a>
+     - Demo App
+  </small>
+  <span class="pull-right">
+     <% if signed_in? %>
+     	<i class="icon-ban-circle"></i><%= link_to "Delete Account", current_user, method: :delete, data: { confirm: "You sure?" } %>
+     <% end %>
+  </span>
+</footer>

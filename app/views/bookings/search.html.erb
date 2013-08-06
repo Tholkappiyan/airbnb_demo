@@ -1,0 +1,45 @@
+<% provide(:title, 'Search Results') %>
+
+<div class="tab-pane hero-unit" style="background-color:cornflowerblue" id="properties">
+<% if @bookings.count==0 %>
+  <h1>There are no bookings made on this property</h1>
+<%else%>
+  <h1>Booking made on this property</h1>
+<% end %>
+<ul style="list-style:none">
+  <% @bookings.each do |entry| %>
+	<li>
+  		<h3 class="title"><%= entry.user.name %></h3>
+  		<h4 class="description"><%= entry.user.email %></h4>
+
+  		<table width="100%">
+    		<tr width="100%">
+      			<td width="50%">
+        			<span>
+			          <table>
+            			<tr>
+              				<td><b>Booked from </b></td>
+				            <td><span><%= Date.strptime(entry.book_from.to_s, "%Y-%m-%d %H:%M:%S %Z").strftime("%d/%m/%Y") %></span></td>
+			            </tr>
+            			<tr>
+              				<td><b>Booked till </b></td>
+              				<td><span><%= Date.strptime(entry.book_till.to_s, "%Y-%m-%d %H:%M:%S %Z").strftime("%d/%m/%Y") %></span></td>
+            			</tr>
+            			<tr>
+            				<td><b>Number of people </b></td>
+              				<td><span><%= entry.count %></span></td>
+			            </tr>
+          			  </table>
+			        </span>
+			    </td>
+      			<td width="30%">
+      			</td>
+      			<td width="20%">
+ 			     </td>
+		    </tr>
+  		</table>
+  
+	</li>
+  <% end %>
+</ul>
+</div>

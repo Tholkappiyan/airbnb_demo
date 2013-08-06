@@ -1,0 +1,157 @@
+<script>
+    function comp(start,end)
+    {
+        var from = String(start).split("-");
+        var to = String(end).split("-");
+
+        if( from[0] > to[0] )
+        {
+          return false;
+        }
+        else if( (from[0]==to[0]) && (from[1] > to[1]) )
+        {
+          return false;
+        }
+        else if( (from[0]==to[0]) && (from[1] == to[1]) && (from[2] > to[2]) )
+        {
+          return false;
+        }
+        else
+        {
+          return true;
+        }
+    }
+
+    <%  @property = @booking.property if @property.nil? %>
+
+    function check_date()
+    {
+      if(document.getElementById("booking_count").value=="")
+      {
+        document.getElementById("count_needed").style.display = "block";
+        return false;
+      }
+      else
+      {
+        document.getElementById("count_needed").style.display = "none";
+
+        var prop_type = "<%= @property.prop_type %>";
+        var c = parseInt(document.getElementById("booking_count").value);
+
+        switch(prop_type)
+        {
+          case "Room" : if(c > 2)
+                        {
+                         document.getElementById("count_limit").innerHTML="Maximum number of people should be 2";
+                         return false;
+                        }
+                        break;
+          case "Apartment" : if(c > 5)
+                             {
+                              document.getElementById("count_limit").innerHTML="Maximum number of people should be 5";
+                              return false;
+                             }
+                             break; 
+          case "House" : if(c > 10)
+                         {
+                           document.getElementById("count_limit").innerHTML = "Maximum number of people should be 10";
+                           return false;
+                         }
+                         break; 
+          default :           document.getElementById("count_limit").innerHTML = "";
+                              break; 
+        }
+
+      }
+
+        var start = document.getElementById("start").value;
+        var end = document.getElementById("end").value;
+        if( (start!='') && (end!='') && (comp(start,end)==false) )
+        {
+            alert("'To' date should be later than 'From' date");
+            return false;
+        }
+
+        var prop_start = '<%= @property.avail_start %>';
+        var prop_from = prop_start.split(" ")[0];
+        var prop_end = '<%= @property.avail_end %>';
+        var prop_to = prop_end.split(" ")[0];
+
+        if( (inRange(start,prop_from,prop_to)==true) && (inRange(end,prop_from,prop_to)==true) )
+        {
+          document.getElementById("booking_book_from").value = document.getElementById("start").value;
+          document.getElementById("booking_book_till").value = document.getElementById("end").value;
+          document.getElementById("new_booking").submit();
+        }
+        else
+        {
+          alert("The property is not available in the requested date");
+          return false;
+        }
+
+    }
+
+    function inRange(val,first,last)
+    {
+      if( (comp(first,val)==true) && (comp(val,last)==true) )
+      {
+        return true;
+      }
+
+      return false;
+    }
+    
+    $(document).ready(function(){
+
+        var d = new Date();
+        var day = d.getDate();
+        var month = d.getMonth();
+
+        var output = d.getFullYear() + '-' +(month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day;
+
+        $("#start").val(output);
+        $("#start").attr('min',output);
+        $("#end").val(output);
+        $("#end").attr('min',output);
+
+        $("#start").blur(function(){
+            $("#end").removeAttr('min');
+            $("#end").attr('min',$("#start").val());
+        });
+
+        $("#end").blur(function(){
+            $("#end").removeAttr('max');
+            $("#start").attr('max',$("#end").val());
+        });
+
+    });
+</script>
+
+<% provide(:title, 'Book Property') %>
+<h1>Book property</h1>
+
+<div class="row">
+  <div class="span6 offset3">
+    <%= form_for(@booking) do |f| %>
+      <%= render 'layouts/error_messages' , :target => @booking %>
+
+      <%= f.label :from %>
+      <input type="date" name="from" id="start" />
+      <%= f.hidden_field :book_from %>
+
+      <%= f.label :to %>
+      <input type="date" name="to" id="end" />
+      <%= f.hidden_field :book_till %>
+
+      <%= f.label :number_of_people %>
+      <%= f.text_field :count %>
+      <label id="count_needed" style="color:red;display:none" >Number of people should not be left blank</label>
+      <label id="count_limit" style="color:red;" ></label>
+
+      <%= f.hidden_field :property_id, :value => @property.id %>
+
+    <% end %>
+      <button class="btn btn-large btn-primary" onclick="check_date()" >Book Property</button>
+
+  </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="tabbable tabs-below">
+	<div class="tab-content">
+		<div class="hero-unit" style="background-color:cornflowerblue" id="profile">
+			<div class="props_books" >
+				<% if current_user.properties.any? %>
+				<h2>Number of properties posted : <%= current_user.properties.count %> </h2>
+
+				<ul style="list-style-type:none" >
+					<%= render @properties %>
+					<li></li>
+				</ul>
+				<%= will_paginate @properties %>
+				<% else %>
+				<h2>No properties posted!!!</h2>
+				<% end %>
+			</div>
+			<button class="btn btn-mini pull-right"><i class="icon-plus"></i><%= link_to "Post new property", new_property_path %></button>
+		</div>
+	</div>
+	<ul class="nav nav-tabs">
+		<br/>
+		<li><i class="icon-star"></i><%= link_to "Profile", user_path(:id => current_user.id), style: 'display:inline' %></li>
+		<li><i class="icon-home"></i><%= link_to "Properties", properties_path , style: 'display:inline' %></li>
+		<li><i class="icon-book"></i><%= link_to "Bookings", bookings_path , style: 'display:inline' %></li>
+	</ul>
+</div> 

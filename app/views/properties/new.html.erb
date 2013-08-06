@@ -1,0 +1,173 @@
+<script>
+    function comp(start,end)
+    {
+        var from = start.split("-");
+        var to = end.split("-");
+
+        if( from[0] > to[0] )
+        {
+          return false;
+        }
+        else if( (from[0]==to[0]) && (from[1] > to[1]) )
+        {
+          return false;
+        }
+        else if( (from[0]==to[0]) && (from[1] == to[1]) && (from[2] > to[2]) )
+        {
+          return false;
+        }
+        else
+        {
+          return true;
+        }
+    }
+    function check_date()
+    {
+        var start = document.getElementById("start").value;
+        var end = document.getElementById("end").value;
+        if( (start!='') && (end!='') && (comp(start,end)==false) )
+        {
+            alert("'To' date should be later than 'From' date");
+            return false;
+        }
+        return true;
+    }
+    
+    $(document).ready(function(){
+
+        var d = new Date();
+        var day = d.getDate();
+        var month = d.getMonth();
+
+        var output = d.getFullYear() + '-' +(month<10 ? '0' : '') + month + '-' +(day<10 ? '0' : '') + day;
+
+        $("#start").val(output);
+        $("#start").attr('min',output);
+        $("#end").val(output);
+        $("#end").attr('min',output);
+
+        $("#start").blur(function(){
+            $("#end").removeAttr('min');
+            $("#end").attr('min',$("#start").val());
+        });
+
+        $("#end").blur(function(){
+            $("#end").removeAttr('max');
+            $("#start").attr('max',$("#end").val());
+        });
+
+    });
+
+    function check_presence()
+    {
+      var flag = true;
+      flag = check_date();
+      if(document.getElementById("property_rate").value=="")
+      {
+        document.getElementById("rate_needed").style.display = "block";
+        flag = false;
+      }
+      else
+      {
+        document.getElementById("rate_needed").style.display = "none";
+      }
+
+      if(document.getElementById("property_addr1").value=="")
+      {
+        document.getElementById("addr_needed").style.display = "block";
+        flag = false;
+      }
+      else
+      {
+        document.getElementById("addr_needed").style.display = "none";
+      }
+
+      if(document.getElementById("property_city").value=="")
+      {
+        document.getElementById("city_needed").style.display = "block";
+        flag = false;
+      }
+      else
+      {
+        document.getElementById("city_needed").style.display = "none";
+      }
+
+      if(document.getElementById("property_title").value=="")
+      {
+        document.getElementById("title_needed").style.display = "block";
+        flag = false;
+      }
+      else
+      {
+        document.getElementById("title_needed").style.display = "none";
+      }
+      document.getElementById("property_avail_start").value = document.getElementById("start").value;
+      document.getElementById("property_avail_end").value = document.getElementById("end").value;
+      return flag;
+    }
+
+</script>
+
+<% provide(:title, 'New Property') %>
+<h1>Post New Property</h1>
+
+<div class="row">
+  <div class="span6 offset3">
+    <%= form_for(@property) do |f| %>
+      <%= render 'layouts/error_messages', :target => @property %>
+
+      <%= f.label :property_type %>
+      <%= f.select :prop_type, [['Room','Room'],['Apartment','Apartment'],['House','House']] %>
+
+      <%= f.label :rate_per_night %>
+      <%= f.text_field :rate %>
+      <label id="rate_needed" style="color:red;display:none">Rate per night cannot be empty</label>
+
+      <hr/>
+
+      <%= f.label :starting_date %>
+      <input type="date" name="property[avail_start]" id="start" onblur="check_date()" />
+      <%= f.hidden_field :avail_start %>
+
+      <hr/>
+
+      <%= f.label :ending_date %>
+      <input type="date" name="property[avail_end]" id="end" onblur="check_date()" />
+      <%= f.hidden_field :avail_end %>
+
+      <hr/>
+
+      <%= f.label :address_line_1 %>
+      <%= f.text_field :addr1 %>
+      <label id="addr_needed" style="color:red;display:none">Address line 1 cannot be empty</label>
+
+      <%= f.label :address_line_2 %>
+      <%= f.text_field :addr2 %>
+
+      <%= f.label :city_name %>
+      <%= f.text_field :city %>
+      <label id="city_needed" style="color:red;display:none">City name cannot be empty</label>
+
+      <%= f.label :state_name %>
+      <%= f.text_field :state %>
+
+      <hr/>
+
+      <%= f.label :title %>
+      <%= f.text_field :title %>
+      <label id="title_needed" style="color:red;display:none">Title cannot be empty</label>
+
+      <%= f.label :description %>
+      <%= f.text_area :description %>
+
+      <hr/>
+
+      <%= f.label :property_photo %>
+      <%= f.file_field :image %>
+
+      <hr/>
+
+      <%= f.submit "Submit my property", class: "btn btn-large btn-primary", onclick: "check_presence()" %>
+    <% end %>
+  </div>
+</div>

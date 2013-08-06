@@ -1,0 +1,16 @@
+<div class="tabbable tabs-below">
+	<div class="tab-content">
+		<div class="center hero-unit" style="background-color:cornflowerblue" id="profile">
+			<h1> Hai <%= current_user.name %> </h1>
+			<p> Welcome!!! </p>
+			<h2>Find a place to stay.</h2>
+			<%= render 'layouts/searchbar' %>
+		</div>
+	</div>
+	<ul class="nav nav-tabs">
+		<br/>
+		<li><i class="icon-star"></i><%= link_to "Profile", user_path(:id => current_user.id), style: 'display:inline' %></li>
+		<li><i class="icon-home"></i><%= link_to "Properties", properties_path , style: 'display:inline' %></li>
+		<li><i class="icon-book"></i><%= link_to "Bookings", bookings_path , style: 'display:inline' %></li>
+	</ul>
+</div> 

@@ -1,0 +1,26 @@
+<div class="tabbable tabs-below">
+	<div class="tab-content">
+		<div class="hero-unit" style="background-color:cornflowerblue" id="profile">
+			<div class="props_books" >
+				<% if current_user.bookings.any? %>
+				<h2>Number of bookings : <%= current_user.bookings.count %></h2>
+				
+				<ul style="list-style-type:none" >
+					<%= render @bookings %>
+					<li></li>
+				</ul>
+				<%= will_paginate @bookings %>
+				
+				<% else %>
+				<h2>No bookings made!!!</h2>
+				<% end %>
+			</div>
+		</div>
+	</div>
+	<ul class="nav nav-tabs">
+		<br/>
+		<li><i class="icon-star"></i><%= link_to "Profile", user_path(:id => current_user.id), style: 'display:inline' %></li>
+		<li><i class="icon-home"></i><%= link_to "Properties", properties_path , style: 'display:inline' %></li>
+		<li><i class="icon-book"></i><%= link_to "Bookings", bookings_path , style: 'display:inline' %></li>
+	</ul>
+</div> 
